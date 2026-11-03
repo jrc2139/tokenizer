@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/sugarme/tokenizer"
+	"github.com/sugarme/tokenizer/model/unigram"
 	"github.com/sugarme/tokenizer/util"
 )
 
@@ -66,5 +68,24 @@ func TestCreateModel(t *testing.T) {
 
 	if !reflect.DeepEqual(want, got) {
 		t.Errorf("want %v, got %v\n", want, got)
+	}
+}
+
+// These tokenizer.json files have no "model.type" and a Metaspace decoder.
+func TestFromFile_UnigramWithoutType(t *testing.T) {
+	for _, name := range []string{"t5-small", "albert-base-v2", "xlm-roberta-base"} {
+		configFile, err := tokenizer.CachedPath(name, "tokenizer.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		tk, err := FromFile(configFile)
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+
+		if _, ok := tk.GetModel().(*unigram.Unigram); !ok {
+			t.Errorf("%s: want *unigram.Unigram, got %T", name, tk.GetModel())
+		}
 	}
 }

@@ -25,6 +25,8 @@ func CreateModel(config *tokenizer.Config) (tokenizer.Model, error) {
 	var typ string
 	if params.Has("type") {
 		typ = params.Get("type").(string)
+	} else if _, ok := params.Get("vocab").([]interface{}); ok {
+		typ = "Unigram" // only Unigram stores vocab as a list of [token, score] pairs
 	} else {
 		// Guessing from `decoder.type`
 		dparams := util.NewParams(config.Decoder)
