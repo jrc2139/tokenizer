@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `pretrained.FromFile` no longer panics on Unigram `tokenizer.json` files without `model.type` (for example `t5-small`, `albert-base-v2`, `xlm-roberta-base`). A list `vocab` now selects the Unigram model.
+
 ### Changed
 
 ### Added
